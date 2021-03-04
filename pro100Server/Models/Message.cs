@@ -12,32 +12,25 @@ namespace pro100Server.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Profiless
+    public partial class Message
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Profiless()
+        public Message()
         {
-            this.Chat_useres = new HashSet<Chat_useres>();
-            this.Message = new HashSet<Message>();
+            this.Message_File = new HashSet<Message_File>();
+            this.Message_to_user = new HashSet<Message_to_user>();
         }
     
         public int ID { get; set; }
-        public Nullable<int> Bot_type_ID { get; set; }
-        public string UserID { get; set; }
-        public string Username { get; set; }
-        public string Name { get; set; }
-        public string Lastname { get; set; }
-        public string Surname { get; set; }
-        public Nullable<int> GenderID { get; set; }
-        public Nullable<System.DateTime> BirthDate { get; set; }
-        public Nullable<int> PhoneNumber { get; set; }
+        public Nullable<int> ChatID { get; set; }
+        public Nullable<int> UserID { get; set; }
+        public string Text { get; set; }
     
-        public virtual AspNetUsers AspNetUsers { get; set; }
+        public virtual Chat Chat { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Chat_useres> Chat_useres { get; set; }
-        public virtual Genders Genders { get; set; }
+        public virtual ICollection<Message_File> Message_File { get; set; }
+        public virtual Profiless Profiless { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Message> Message { get; set; }
-        public virtual TypeOfBots TypeOfBots { get; set; }
+        public virtual ICollection<Message_to_user> Message_to_user { get; set; }
     }
 }

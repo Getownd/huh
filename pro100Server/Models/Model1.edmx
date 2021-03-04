@@ -4,17 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="Хранилище u436263_robotModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityType Name="__MigrationHistory">
-          <Key>
-            <PropertyRef Name="MigrationId" />
-            <PropertyRef Name="ContextKey" />
-          </Key>
-          <Property Name="MigrationId" Type="nvarchar" MaxLength="150" Nullable="false" />
-          <Property Name="ContextKey" Type="nvarchar" MaxLength="300" Nullable="false" />
-          <Property Name="Model" Type="varbinary(max)" Nullable="false" />
-          <Property Name="ProductVersion" Type="nvarchar" MaxLength="32" Nullable="false" />
-        </EntityType>
+      <Schema Namespace="Хранилище u436263_robotModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="AspNetRoles">
           <Key>
             <PropertyRef Name="Id" />
@@ -66,12 +56,54 @@
           <Property Name="AccessFailedCount" Type="int" Nullable="false" />
           <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
         </EntityType>
+        <EntityType Name="Chat">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="ChatID" Type="int" />
+          <Property Name="Name" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Chat_useres">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="UserID" Type="int" />
+          <Property Name="ChatID" Type="int" />
+        </EntityType>
         <EntityType Name="Genders">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="7" />
+        </EntityType>
+        <EntityType Name="Message">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="ChatID" Type="int" />
+          <Property Name="UserID" Type="int" />
+          <Property Name="Text" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="Message_File">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="MessageID" Type="int" />
+          <Property Name="FileID" Type="int" />
+        </EntityType>
+        <EntityType Name="Message_to_user">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="MessageID" Type="int" />
+          <Property Name="UserID" Type="int" />
+          <Property Name="See" Type="bit" />
         </EntityType>
         <EntityType Name="MM_Bots">
           <Key>
@@ -89,24 +121,14 @@
           </Key>
           <Property Name="ID" Type="int" Nullable="false" />
           <Property Name="Bot_type_ID" Type="int" />
-          <Property Name="UserID" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="UserID" Type="nvarchar" MaxLength="128" />
           <Property Name="Username" Type="varchar" MaxLength="30" />
           <Property Name="Name" Type="varchar" MaxLength="30" />
           <Property Name="Lastname" Type="varchar" MaxLength="30" />
           <Property Name="Surname" Type="varchar" MaxLength="30" />
           <Property Name="GenderID" Type="int" />
           <Property Name="BirthDate" Type="date" />
-          <Property Name="PhoneNumber" Type="nvarchar" MaxLength="12" />
-        </EntityType>
-        <EntityType Name="sysdiagrams">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="principal_id" Type="int" Nullable="false" />
-          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="version" Type="int" />
-          <Property Name="definition" Type="varbinary(max)" />
+          <Property Name="PhoneNumber" Type="int" />
         </EntityType>
         <EntityType Name="TypeOfBots">
           <Key>
@@ -115,6 +137,30 @@
           <Property Name="ID" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="30" />
         </EntityType>
+        <Association Name="FK_Chat_useres_Chat">
+          <End Role="Chat" Type="Self.Chat" Multiplicity="0..1" />
+          <End Role="Chat_useres" Type="Self.Chat_useres" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Chat">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Chat_useres">
+              <PropertyRef Name="ChatID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Chat_useres_Profiless">
+          <End Role="Profiless" Type="Self.Profiless" Multiplicity="0..1" />
+          <End Role="Chat_useres" Type="Self.Chat_useres" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Profiless">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Chat_useres">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
           <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -171,6 +217,54 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Message_Chat">
+          <End Role="Chat" Type="Self.Chat" Multiplicity="0..1" />
+          <End Role="Message" Type="Self.Message" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Chat">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Message">
+              <PropertyRef Name="ChatID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Message_File_Message">
+          <End Role="Message" Type="Self.Message" Multiplicity="0..1" />
+          <End Role="Message_File" Type="Self.Message_File" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Message">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Message_File">
+              <PropertyRef Name="MessageID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Message_Profiless">
+          <End Role="Profiless" Type="Self.Profiless" Multiplicity="0..1" />
+          <End Role="Message" Type="Self.Message" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Profiless">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Message">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Message_to_user_Message">
+          <End Role="Message" Type="Self.Message" Multiplicity="0..1" />
+          <End Role="Message_to_user" Type="Self.Message_to_user" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Message">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Message_to_user">
+              <PropertyRef Name="MessageID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_MM_Bots_TypeOfBots">
           <End Role="TypeOfBots" Type="Self.TypeOfBots" Multiplicity="0..1" />
           <End Role="MM_Bots" Type="Self.MM_Bots" Multiplicity="*" />
@@ -184,7 +278,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Profiless_AspNetUsers">
-          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="0..1" />
           <End Role="Profiless" Type="Self.Profiless" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="AspNetUsers">
@@ -220,17 +314,28 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="Хранилище u436263_robotModelContainer">
-          <EntitySet Name="__MigrationHistory" EntityType="Self.__MigrationHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaims" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogins" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetUserRoles" EntityType="Self.AspNetUserRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Chat" EntityType="Self.Chat" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Chat_useres" EntityType="Self.Chat_useres" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Genders" EntityType="Self.Genders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Message" EntityType="Self.Message" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Message_File" EntityType="Self.Message_File" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Message_to_user" EntityType="Self.Message_to_user" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MM_Bots" EntityType="Self.MM_Bots" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Profiless" EntityType="Self.Profiless" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TypeOfBots" EntityType="Self.TypeOfBots" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Chat_useres_Chat" Association="Self.FK_Chat_useres_Chat">
+            <End Role="Chat" EntitySet="Chat" />
+            <End Role="Chat_useres" EntitySet="Chat_useres" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Chat_useres_Profiless" Association="Self.FK_Chat_useres_Profiless">
+            <End Role="Profiless" EntitySet="Profiless" />
+            <End Role="Chat_useres" EntitySet="Chat_useres" />
+          </AssociationSet>
           <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
@@ -246,6 +351,22 @@
           <AssociationSet Name="FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Message_Chat" Association="Self.FK_Message_Chat">
+            <End Role="Chat" EntitySet="Chat" />
+            <End Role="Message" EntitySet="Message" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Message_File_Message" Association="Self.FK_Message_File_Message">
+            <End Role="Message" EntitySet="Message" />
+            <End Role="Message_File" EntitySet="Message_File" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Message_Profiless" Association="Self.FK_Message_Profiless">
+            <End Role="Profiless" EntitySet="Profiless" />
+            <End Role="Message" EntitySet="Message" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Message_to_user_Message" Association="Self.FK_Message_to_user_Message">
+            <End Role="Message" EntitySet="Message" />
+            <End Role="Message_to_user" EntitySet="Message_to_user" />
           </AssociationSet>
           <AssociationSet Name="FK_MM_Bots_TypeOfBots" Association="Self.FK_MM_Bots_TypeOfBots">
             <End Role="TypeOfBots" EntitySet="TypeOfBots" />
@@ -264,19 +385,18 @@
             <End Role="Profiless" EntitySet="Profiless" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="u436263_robotModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="C__MigrationHistory">
+        <EntityType Name="AspNetRoles">
           <Key>
-            <PropertyRef Name="MigrationId" />
-            <PropertyRef Name="ContextKey" />
+            <PropertyRef Name="Id" />
           </Key>
-          <Property Name="MigrationId" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="ContextKey" Type="String" MaxLength="300" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Model" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
-          <Property Name="ProductVersion" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Id" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="AspNetUsers" Relationship="Self.AspNetUserRoles" FromRole="AspNetRoles" ToRole="AspNetUsers" />
         </EntityType>
         <EntityType Name="AspNetUserClaims">
           <Key>
@@ -318,7 +438,27 @@
           <NavigationProperty Name="AspNetUserClaims" Relationship="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserClaims" />
           <NavigationProperty Name="AspNetUserLogins" Relationship="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserLogins" />
           <NavigationProperty Name="Profiless" Relationship="Self.FK_Profiless_AspNetUsers" FromRole="AspNetUsers" ToRole="Profiless" />
-          <NavigationProperty Name="AspNetRoles" Relationship="u436263_robotModel.AspNetUserRoles" FromRole="AspNetUsers" ToRole="AspNetRoles" />
+          <NavigationProperty Name="AspNetRoles" Relationship="Self.AspNetUserRoles" FromRole="AspNetUsers" ToRole="AspNetRoles" />
+        </EntityType>
+        <EntityType Name="Chat">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="ChatID" Type="Int32" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Chat_useres" Relationship="Self.FK_Chat_useres_Chat" FromRole="Chat" ToRole="Chat_useres" />
+          <NavigationProperty Name="Message" Relationship="Self.FK_Message_Chat" FromRole="Chat" ToRole="Message" />
+        </EntityType>
+        <EntityType Name="Chat_useres">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="UserID" Type="Int32" />
+          <Property Name="ChatID" Type="Int32" />
+          <NavigationProperty Name="Chat" Relationship="Self.FK_Chat_useres_Chat" FromRole="Chat_useres" ToRole="Chat" />
+          <NavigationProperty Name="Profiless" Relationship="Self.FK_Chat_useres_Profiless" FromRole="Chat_useres" ToRole="Profiless" />
         </EntityType>
         <EntityType Name="Genders">
           <Key>
@@ -327,6 +467,38 @@
           <Property Name="ID" Type="Int32" Nullable="false" />
           <Property Name="Name" Type="String" MaxLength="7" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Profiless" Relationship="Self.FK_Profiless_Genders" FromRole="Genders" ToRole="Profiless" />
+        </EntityType>
+        <EntityType Name="Message">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="ChatID" Type="Int32" />
+          <Property Name="UserID" Type="Int32" />
+          <Property Name="Text" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Chat" Relationship="Self.FK_Message_Chat" FromRole="Message" ToRole="Chat" />
+          <NavigationProperty Name="Message_File" Relationship="Self.FK_Message_File_Message" FromRole="Message" ToRole="Message_File" />
+          <NavigationProperty Name="Profiless" Relationship="Self.FK_Message_Profiless" FromRole="Message" ToRole="Profiless" />
+          <NavigationProperty Name="Message_to_user" Relationship="Self.FK_Message_to_user_Message" FromRole="Message" ToRole="Message_to_user" />
+        </EntityType>
+        <EntityType Name="Message_File">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="MessageID" Type="Int32" />
+          <Property Name="FileID" Type="Int32" />
+          <NavigationProperty Name="Message" Relationship="Self.FK_Message_File_Message" FromRole="Message_File" ToRole="Message" />
+        </EntityType>
+        <EntityType Name="Message_to_user">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="MessageID" Type="Int32" />
+          <Property Name="UserID" Type="Int32" />
+          <Property Name="See" Type="Boolean" />
+          <NavigationProperty Name="Message" Relationship="Self.FK_Message_to_user_Message" FromRole="Message_to_user" ToRole="Message" />
         </EntityType>
         <EntityType Name="MM_Bots">
           <Key>
@@ -345,27 +517,19 @@
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" />
           <Property Name="Bot_type_ID" Type="Int32" />
-          <Property Name="UserID" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserID" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="Username" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
           <Property Name="Name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
           <Property Name="Lastname" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
           <Property Name="Surname" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
           <Property Name="GenderID" Type="Int32" />
           <Property Name="BirthDate" Type="DateTime" Precision="0" />
-          <Property Name="PhoneNumber" Type="String" MaxLength="12" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="Int32" />
           <NavigationProperty Name="AspNetUsers" Relationship="Self.FK_Profiless_AspNetUsers" FromRole="Profiless" ToRole="AspNetUsers" />
+          <NavigationProperty Name="Chat_useres" Relationship="Self.FK_Chat_useres_Profiless" FromRole="Profiless" ToRole="Chat_useres" />
           <NavigationProperty Name="Genders" Relationship="Self.FK_Profiless_Genders" FromRole="Profiless" ToRole="Genders" />
+          <NavigationProperty Name="Message" Relationship="Self.FK_Message_Profiless" FromRole="Profiless" ToRole="Message" />
           <NavigationProperty Name="TypeOfBots" Relationship="Self.FK_Profiless_TypeOfBots1" FromRole="Profiless" ToRole="TypeOfBots" />
-        </EntityType>
-        <EntityType Name="sysdiagrams">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="principal_id" Type="Int32" Nullable="false" />
-          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="version" Type="Int32" />
-          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
         <EntityType Name="TypeOfBots">
           <Key>
@@ -405,13 +569,49 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Profiless_AspNetUsers">
-          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="0..1" />
           <End Role="Profiless" Type="Self.Profiless" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="AspNetUsers">
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Profiless">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Chat_useres_Chat">
+          <End Role="Chat" Type="Self.Chat" Multiplicity="0..1" />
+          <End Role="Chat_useres" Type="Self.Chat_useres" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Chat">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Chat_useres">
+              <PropertyRef Name="ChatID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Message_Chat">
+          <End Role="Chat" Type="Self.Chat" Multiplicity="0..1" />
+          <End Role="Message" Type="Self.Message" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Chat">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Message">
+              <PropertyRef Name="ChatID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Chat_useres_Profiless">
+          <End Role="Profiless" Type="Self.Profiless" Multiplicity="0..1" />
+          <End Role="Chat_useres" Type="Self.Chat_useres" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Profiless">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Chat_useres">
               <PropertyRef Name="UserID" />
             </Dependent>
           </ReferentialConstraint>
@@ -425,6 +625,42 @@
             </Principal>
             <Dependent Role="Profiless">
               <PropertyRef Name="GenderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Message_File_Message">
+          <End Role="Message" Type="Self.Message" Multiplicity="0..1" />
+          <End Role="Message_File" Type="Self.Message_File" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Message">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Message_File">
+              <PropertyRef Name="MessageID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Message_Profiless">
+          <End Role="Profiless" Type="Self.Profiless" Multiplicity="0..1" />
+          <End Role="Message" Type="Self.Message" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Profiless">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Message">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Message_to_user_Message">
+          <End Role="Message" Type="Self.Message" Multiplicity="0..1" />
+          <End Role="Message_to_user" Type="Self.Message_to_user" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Message">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Message_to_user">
+              <PropertyRef Name="MessageID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -452,15 +688,23 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="u436263_robotEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="C__MigrationHistory" EntityType="Self.C__MigrationHistory" />
+        <Association Name="AspNetUserRoles">
+          <End Role="AspNetRoles" Type="Self.AspNetRoles" Multiplicity="*" />
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="u436263_robotEntities2" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" />
           <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaims" />
           <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogins" />
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" />
+          <EntitySet Name="Chat" EntityType="Self.Chat" />
+          <EntitySet Name="Chat_useres" EntityType="Self.Chat_useres" />
           <EntitySet Name="Genders" EntityType="Self.Genders" />
+          <EntitySet Name="Message" EntityType="Self.Message" />
+          <EntitySet Name="Message_File" EntityType="Self.Message_File" />
+          <EntitySet Name="Message_to_user" EntityType="Self.Message_to_user" />
           <EntitySet Name="MM_Bots" EntityType="Self.MM_Bots" />
           <EntitySet Name="Profiless" EntityType="Self.Profiless" />
-          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
           <EntitySet Name="TypeOfBots" EntityType="Self.TypeOfBots" />
           <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
@@ -474,9 +718,33 @@
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="Profiless" EntitySet="Profiless" />
           </AssociationSet>
+          <AssociationSet Name="FK_Chat_useres_Chat" Association="Self.FK_Chat_useres_Chat">
+            <End Role="Chat" EntitySet="Chat" />
+            <End Role="Chat_useres" EntitySet="Chat_useres" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Message_Chat" Association="Self.FK_Message_Chat">
+            <End Role="Chat" EntitySet="Chat" />
+            <End Role="Message" EntitySet="Message" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Chat_useres_Profiless" Association="Self.FK_Chat_useres_Profiless">
+            <End Role="Profiless" EntitySet="Profiless" />
+            <End Role="Chat_useres" EntitySet="Chat_useres" />
+          </AssociationSet>
           <AssociationSet Name="FK_Profiless_Genders" Association="Self.FK_Profiless_Genders">
             <End Role="Genders" EntitySet="Genders" />
             <End Role="Profiless" EntitySet="Profiless" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Message_File_Message" Association="Self.FK_Message_File_Message">
+            <End Role="Message" EntitySet="Message" />
+            <End Role="Message_File" EntitySet="Message_File" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Message_Profiless" Association="Self.FK_Message_Profiless">
+            <End Role="Profiless" EntitySet="Profiless" />
+            <End Role="Message" EntitySet="Message" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Message_to_user_Message" Association="Self.FK_Message_to_user_Message">
+            <End Role="Message" EntitySet="Message" />
+            <End Role="Message_to_user" EntitySet="Message_to_user" />
           </AssociationSet>
           <AssociationSet Name="FK_MM_Bots_TypeOfBots" Association="Self.FK_MM_Bots_TypeOfBots">
             <End Role="TypeOfBots" EntitySet="TypeOfBots" />
@@ -486,37 +754,22 @@
             <End Role="TypeOfBots" EntitySet="TypeOfBots" />
             <End Role="Profiless" EntitySet="Profiless" />
           </AssociationSet>
-          <EntitySet Name="AspNetRoles" EntityType="u436263_robotModel.AspNetRoles" />
-          <AssociationSet Name="AspNetUserRoles" Association="u436263_robotModel.AspNetUserRoles">
+          <AssociationSet Name="AspNetUserRoles" Association="Self.AspNetUserRoles">
             <End Role="AspNetRoles" EntitySet="AspNetRoles" />
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
           </AssociationSet>
         </EntityContainer>
-        <EntityType Name="AspNetRoles">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="AspNetUsers" Relationship="u436263_robotModel.AspNetUserRoles" FromRole="AspNetRoles" ToRole="AspNetUsers" />
-        </EntityType>
-        <Association Name="AspNetUserRoles">
-          <End Type="u436263_robotModel.AspNetRoles" Role="AspNetRoles" Multiplicity="*" />
-          <End Type="u436263_robotModel.AspNetUsers" Role="AspNetUsers" Multiplicity="*" />
-        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="Хранилище u436263_robotModelContainer" CdmEntityContainer="u436263_robotEntities">
-          <EntitySetMapping Name="C__MigrationHistory">
-            <EntityTypeMapping TypeName="u436263_robotModel.C__MigrationHistory">
-              <MappingFragment StoreEntitySet="__MigrationHistory">
-                <ScalarProperty Name="MigrationId" ColumnName="MigrationId" />
-                <ScalarProperty Name="ContextKey" ColumnName="ContextKey" />
-                <ScalarProperty Name="Model" ColumnName="Model" />
-                <ScalarProperty Name="ProductVersion" ColumnName="ProductVersion" />
+        <EntityContainerMapping StorageEntityContainer="Хранилище u436263_robotModelContainer" CdmEntityContainer="u436263_robotEntities2">
+          <EntitySetMapping Name="AspNetRoles">
+            <EntityTypeMapping TypeName="u436263_robotModel.AspNetRoles">
+              <MappingFragment StoreEntitySet="AspNetRoles">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -557,11 +810,58 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Chat">
+            <EntityTypeMapping TypeName="u436263_robotModel.Chat">
+              <MappingFragment StoreEntitySet="Chat">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="ChatID" ColumnName="ChatID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Chat_useres">
+            <EntityTypeMapping TypeName="u436263_robotModel.Chat_useres">
+              <MappingFragment StoreEntitySet="Chat_useres">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="ChatID" ColumnName="ChatID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Genders">
             <EntityTypeMapping TypeName="u436263_robotModel.Genders">
               <MappingFragment StoreEntitySet="Genders">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Message">
+            <EntityTypeMapping TypeName="u436263_robotModel.Message">
+              <MappingFragment StoreEntitySet="Message">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="ChatID" ColumnName="ChatID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Message_File">
+            <EntityTypeMapping TypeName="u436263_robotModel.Message_File">
+              <MappingFragment StoreEntitySet="Message_File">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="MessageID" ColumnName="MessageID" />
+                <ScalarProperty Name="FileID" ColumnName="FileID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Message_to_user">
+            <EntityTypeMapping TypeName="u436263_robotModel.Message_to_user">
+              <MappingFragment StoreEntitySet="Message_to_user">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="MessageID" ColumnName="MessageID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="See" ColumnName="See" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -592,17 +892,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="sysdiagrams">
-            <EntityTypeMapping TypeName="u436263_robotModel.sysdiagrams">
-              <MappingFragment StoreEntitySet="sysdiagrams">
-                <ScalarProperty Name="name" ColumnName="name" />
-                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
-                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
-                <ScalarProperty Name="version" ColumnName="version" />
-                <ScalarProperty Name="definition" ColumnName="definition" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="TypeOfBots">
             <EntityTypeMapping TypeName="u436263_robotModel.TypeOfBots">
               <MappingFragment StoreEntitySet="TypeOfBots">
@@ -611,20 +900,12 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="AspNetRoles">
-            <EntityTypeMapping TypeName="u436263_robotModel.AspNetRoles">
-              <MappingFragment StoreEntitySet="AspNetRoles">
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <AssociationSetMapping Name="AspNetUserRoles" TypeName="u436263_robotModel.AspNetUserRoles" StoreEntitySet="AspNetUserRoles">
-            <EndProperty Name="AspNetUsers">
-              <ScalarProperty Name="Id" ColumnName="UserId" />
-            </EndProperty>
             <EndProperty Name="AspNetRoles">
               <ScalarProperty Name="Id" ColumnName="RoleId" />
+            </EndProperty>
+            <EndProperty Name="AspNetUsers">
+              <ScalarProperty Name="Id" ColumnName="UserId" />
             </EndProperty>
           </AssociationSetMapping>
         </EntityContainerMapping>

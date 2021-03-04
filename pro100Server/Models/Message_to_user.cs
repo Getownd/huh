@@ -12,11 +12,13 @@ namespace pro100Server.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class C__MigrationHistory
+    public partial class Message_to_user
     {
-        public string MigrationId { get; set; }
-        public string ContextKey { get; set; }
-        public byte[] Model { get; set; }
-        public string ProductVersion { get; set; }
+        public int ID { get; set; }
+        public Nullable<int> MessageID { get; set; }
+        public Nullable<int> UserID { get; set; }
+        public Nullable<bool> See { get; set; }
+    
+        public virtual Message Message { get; set; }
     }
 }

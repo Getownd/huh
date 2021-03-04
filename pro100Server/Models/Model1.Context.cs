@@ -13,10 +13,10 @@ namespace pro100Server.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class u436263_robotEntities : DbContext
+    public partial class u436263_robotEntities2 : DbContext
     {
-        public u436263_robotEntities()
-            : base("name=u436263_robotEntities")
+        public u436263_robotEntities2()
+            : base("name=u436263_robotEntities2")
         {
         }
     
@@ -25,15 +25,18 @@ namespace pro100Server.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<C__MigrationHistory> C__MigrationHistory { get; set; }
+        public virtual DbSet<AspNetRoles> AspNetRoles { get; set; }
         public virtual DbSet<AspNetUserClaims> AspNetUserClaims { get; set; }
         public virtual DbSet<AspNetUserLogins> AspNetUserLogins { get; set; }
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
+        public virtual DbSet<Chat> Chat { get; set; }
+        public virtual DbSet<Chat_useres> Chat_useres { get; set; }
         public virtual DbSet<Genders> Genders { get; set; }
+        public virtual DbSet<Message> Message { get; set; }
+        public virtual DbSet<Message_File> Message_File { get; set; }
+        public virtual DbSet<Message_to_user> Message_to_user { get; set; }
         public virtual DbSet<MM_Bots> MM_Bots { get; set; }
         public virtual DbSet<Profiless> Profiless { get; set; }
-        public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
         public virtual DbSet<TypeOfBots> TypeOfBots { get; set; }
-        public virtual DbSet<AspNetRoles> AspNetRoles { get; set; }
     }
 }

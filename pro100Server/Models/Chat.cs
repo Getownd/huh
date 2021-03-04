@@ -12,32 +12,22 @@ namespace pro100Server.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Profiless
+    public partial class Chat
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Profiless()
+        public Chat()
         {
             this.Chat_useres = new HashSet<Chat_useres>();
             this.Message = new HashSet<Message>();
         }
     
         public int ID { get; set; }
-        public Nullable<int> Bot_type_ID { get; set; }
-        public string UserID { get; set; }
-        public string Username { get; set; }
+        public Nullable<int> ChatID { get; set; }
         public string Name { get; set; }
-        public string Lastname { get; set; }
-        public string Surname { get; set; }
-        public Nullable<int> GenderID { get; set; }
-        public Nullable<System.DateTime> BirthDate { get; set; }
-        public Nullable<int> PhoneNumber { get; set; }
     
-        public virtual AspNetUsers AspNetUsers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Chat_useres> Chat_useres { get; set; }
-        public virtual Genders Genders { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Message> Message { get; set; }
-        public virtual TypeOfBots TypeOfBots { get; set; }
     }
 }
